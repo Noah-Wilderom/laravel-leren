@@ -1,0 +1,5 @@
+Om een migration te maken: 
+php artisan make:migration create_posts_table --create="posts"
+
+Om een update migration te maken: 
+php artisan make:migration add_is_admin_column_to_posts_tables --table="posts"

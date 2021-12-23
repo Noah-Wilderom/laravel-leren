@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,3 +39,33 @@ Route::resource('post', '\App\Http\Controllers\PostController');
 Route::get('contact', '\App\Http\Controllers\PostController@contact');
 
 Route::get('posts/{id}', '\App\Http\Controllers\PostController@showPost');
+
+
+/* 
+============================
+= Database Raw SQL Queries =
+============================
+*/
+
+// Route::get('/delete/{id}', function ($id) {
+//     DB::delete("DELETE FROM posts WHERE id= :id", [$id]);
+// });
+
+// Route::get('/update', function () {
+//     DB::update('UPDATE posts SET title= "updateded title" WHERE id = :id', [6]);
+// });
+
+// Route::get('/read/{id}', function ($id) {
+//     $results = DB::select('SELECT * FROM posts WHERE id= :id', [$id]);
+//     foreach($results as $row) {
+//         echo "title: " . $row->title . "<br>"; 
+//         echo "content: " . $row->body . "<br>"; 
+//         echo "creator: " . $row->creator . "<br><br>"; 
+//     }
+// });
+
+// Route::get('/insert/{title}/{creator}', function($title, $creator) {
+
+// DB::insert('INSERT INTO posts (title, body, creator) VALUES (:title, :body, :creator)', [$title, "LaravelDev", $creator]);
+
+// });
