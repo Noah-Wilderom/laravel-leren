@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Models\Post;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,11 +36,11 @@ Route::get('/', function () {
 // Route::get('/post/{id}', '\App\Http\Controllers\PostController@index'); // 2e parameter is hoe je een controller bind aan een Route (Laravel 8.0)
 
 // Net zoals dat je --resource in php artisan make:controller kan gebruiken kan je ook Route::resource($nickname, $controller) gebruiken om alles al een nickname en route te geven. (laravel 8.0)
-Route::resource('post', '\App\Http\Controllers\PostController');
+Route::resource('/post', '\App\Http\Controllers\PostController');
 
-Route::get('contact', '\App\Http\Controllers\PostController@contact');
+Route::get('/contact', '\App\Http\Controllers\PostController@contact');
 
-Route::get('posts/{id}', '\App\Http\Controllers\PostController@showPost');
+Route::get('/posts/{id}', '\App\Http\Controllers\PostController@showPost');
 
 
 /* 
@@ -69,3 +71,112 @@ Route::get('posts/{id}', '\App\Http\Controllers\PostController@showPost');
 // DB::insert('INSERT INTO posts (title, body, creator) VALUES (:title, :body, :creator)', [$title, "LaravelDev", $creator]);
 
 // });
+
+/* 
+============================
+= ELOQUENT (ORM) =
+============================
+*/
+Route::get('/find', function () {
+
+    $posts = Post::find(7);
+
+    return $posts->title;
+    // foreach($posts as $post) {
+    //     echo $post->title . "<br>";
+    // }
+});
+
+Route::get('/findwhere', function () {
+    $posts = Post::where('id', 8)->orderBy('id', 'desc')->take(1)->get();
+    return $posts;
+});
+
+Route::get('/findmore', function () {
+    $posts = Post::findOrFail(1);
+
+    return $posts;
+});
+
+Route::get('/where', function () {
+    $posts = Post::where('users_count', '<', 50)->firstOrFail();
+});
+
+Route::get('/basicinsert', function () {
+    $post = new Post;
+
+    $post->title = 'new ORM title';
+    $post->body = 'Testing Eloquent';
+    $post->creator = 'NoahDev';
+    return $post->save();
+
+});
+
+
+// vind de id, en update
+Route::get('/basicinsert2', function () {
+    $post = Post::find(8);
+
+    $post->title = 'new ORM title 2';
+    $post->body = 'Testing Eloquent 2';
+    $post->creator = 'NoahDev';
+    $post->save();
+
+});
+
+// Als je de $fillables niet zet in de model dan krijg je een error MassAssignmentException
+// Zodra de $fillables in de model staan dan kag dit wel
+Route::get('/create', function() {
+    Post::create(['title' => 'Create method testing', 'body' => 'testing the /create', 'user_id' => 6]);
+});
+
+
+Route::get('/update', function() {
+    Post::where('id', 7)->where('is_admin', 0)->update(['title' => 'New update method testing', 'body' => 'testing update method', 'creator' => 'NoahDev']);
+});
+
+Route::get('/delete', function() {
+    $post = Post::find(7);
+    $post->delete();
+});
+
+Route::get('/delete2', function() {
+    Post::destroy([9, 12]);
+});
+
+Route::get('/softdelete', function() {
+    Post::find(16)->delete();
+});
+
+Route::get('/readsoftdelete', function() {
+    return Post::onlyTrashed()->get();
+});
+
+Route::get('/restoresoftdelete', function() {
+    return Post::withTrashed()->restore();;
+});
+
+Route::get('/forcedelete', function() {
+    Post::onlyTrashed()->where('id', 16)->forceDelete();
+});
+
+
+// =======================
+// Eloquent relationships
+// =======================
+// 
+Route::get('/user/{id}/post', function($id) { 
+    return User::find($id)->post;
+});
+// Inversed relationship
+Route::get('/post/{id}/user', function($id) {
+    return Post::find($id)->user->name;
+});
+
+Route::get('/posts', function () {
+    $user = User::find(1);
+    foreach($user->posts as $post) {
+       echo $post->title . "<br>"; 
+    }
+});
+

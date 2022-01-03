@@ -4,15 +4,15 @@ namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 
-class ExampleTest extends TestCase
+class EnvTest extends TestCase
 {
     /**
      * A basic test example.
      *
      * @return void
      */
-    public function test_example()
+    public function test_Env_Enabled()
     {
-        $this->assertTrue(true);
+        $this->assertTrue(file_exists(__DIR__ . './../../.env'));
     }
 }
