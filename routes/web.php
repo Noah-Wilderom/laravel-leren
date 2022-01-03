@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Post;
+use App\Models\Country;
 
 /*
 |--------------------------------------------------------------------------
@@ -193,4 +194,17 @@ Route::get('/user/pivot', function () {
         echo $role->pivot->created_at . "<br>";
     }
 });
+
+Route::get('/user/country', function() {
+    $country = Country::find(1);
+    foreach($country->posts as $post) {
+        return $post->title;
+    }
+});
+
+
+// ===============
+//   Polymorphic
+// ===============
+
 
