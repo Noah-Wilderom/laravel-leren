@@ -179,4 +179,18 @@ Route::get('/posts', function () {
        echo $post->title . "<br>"; 
     }
 });
+// Pivot
+Route::get('/user/{id}/role', function($id) {
+    return User::find($id)->roles;
+});
+
+
+// Accesing the intermediate table / pivot
+Route::get('/user/pivot', function () {
+    $user = User::find(1);
+
+    foreach($user->roles as $role) {
+        echo $role->pivot->created_at . "<br>";
+    }
+});
 
