@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Country;
+use App\Models\Photo;
 
 /*
 |--------------------------------------------------------------------------
@@ -128,7 +129,7 @@ Route::get('/basicinsert2', function () {
 // Als je de $fillables niet zet in de model dan krijg je een error MassAssignmentException
 // Zodra de $fillables in de model staan dan kag dit wel
 Route::get('/create', function() {
-    Post::create(['title' => 'Create method testing', 'body' => 'testing the /create', 'user_id' => 6]);
+    Post::create(['title' => 'Create method testing', 'body' => 'testing the /create']);
 });
 
 
@@ -207,4 +208,17 @@ Route::get('/user/country', function() {
 //   Polymorphic
 // ===============
 
+Route::get('/user/photos/{id}', function($id) {
+    $post = Post::find($id);
+    // $user = User::find($id);
 
+    foreach($post->photos as $photo) {
+        echo $photo->path . "<br>";
+    }
+});
+
+Route::get('photo/{id}/post', function($id) {
+    $photo = Photo::findOrFail($id);
+    $imageable = $photo->imageable;
+    return $imageable;
+}); 
